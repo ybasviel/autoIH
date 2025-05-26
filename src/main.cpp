@@ -1,45 +1,31 @@
 #include <Arduino.h>
+#include "IH.h"
 
 #define RCV_BUFF_LEN 1
 
 uint8_t button;
 
-const uint8_t pins[6] = {8, 4, 2, 12, 6, 10};
-
-enum BUTTON_CONF {
-  POWER,
-  HEAT,
-  UP,
-  DOWN,
-  BOIL,
-  SPEED
-};
-
-void push(uint8_t i){
-  digitalWrite(pins[i], HIGH);
-  delay(500);
-  digitalWrite(pins[i], LOW);
-}
+IH ih;
 
 void buttonCtrl(){
   switch(button){
     case '0':
-      push(BUTTON_CONF::POWER);
+      ih.power();
       break;
     case '1':
-      push(BUTTON_CONF::HEAT);
+      ih.heat();
       break;
     case '2':
-      push(BUTTON_CONF::UP); 
+      ih.up(); 
       break;
     case '3':
-      push(BUTTON_CONF::DOWN); 
+      ih.down(); 
       break;
     case '4':
-      push(BUTTON_CONF::BOIL);
+      ih.boil();
       break;
     case '5':
-      push(BUTTON_CONF::SPEED);
+      ih.speed();
       break;
     default:
       break;
@@ -53,12 +39,8 @@ void showPrompt(){
 
 void setup() {
   Serial.begin(115200);
-
-  for(uint8_t i = 0; i < 6; i++){
-    pinMode(pins[i], OUTPUT);
-    digitalWrite(pins[i], LOW);
-  }
-
+  ih.init();
+  
   showPrompt();
 }
 
